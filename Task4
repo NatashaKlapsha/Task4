@@ -1,0 +1,106 @@
+package Qsort;
+
+import java.util.Scanner;
+
+/**
+ * Created by Natalia on 28.03.2015.
+ */
+public class Sort {
+
+    private static String[] strArray;
+    private static double arrayD;
+
+    public static void main(String[] args) throws Exception {
+        String fileName = args[1];
+        String fileName1 = args[2];
+        switch (fileName){
+            case "Std":
+                Std std = new Std();
+                std.readIn();
+            case "XML":
+                XMLFile xmlFile = new XMLFile();
+                xmlFile.readFromXML(fileName);
+            case "CVS":
+                ReadFromFile readFromFile = new ReadFromFile();
+                readFromFile.read(fileName, ",");
+            case "File":
+                readFromFile = new ReadFromFile();
+                readFromFile.read(fileName, "/n");
+
+        }
+        switch (fileName1){
+            case "Std":
+                Std std = new Std();
+                std.writeOut(fileName1);
+            case "XML":
+                XMLFile xmlFile = new XMLFile();
+                xmlFile.writeToXML(fileName);
+            case "CVS":
+                ReadFromFile readFromFile = new ReadFromFile();
+                readFromFile.writeToCVS(fileName, ",");
+            case "File":
+                readFromFile = new ReadFromFile();
+                readFromFile.write(fileName, "/n");
+        }
+
+
+
+    }
+
+
+    public static void sort(double[] array, int left, int right) {
+
+        double tmp = array[left];
+        array[left] = array[right];
+        array[right] = tmp;
+    }
+
+    public static void myQSort(double[] array, int left, int right) {
+
+        if (left >= right) {
+            return;
+        }
+        sort(array, left, (left + right) / 2);
+        int last = left;
+
+        for (int i = last + 1; i <= right; ++i) {
+
+            if (array[i] >= array[left]) {
+                sort(array, ++last, i);
+            }
+        }
+
+        sort(array, left, last);
+        myQSort(array, left, last - 1);
+        myQSort(array, last + 1, right);
+    }
+
+
+    public static void sortByMethod(String method, double[] array) {
+
+        Sorting sorting = null;
+        switch (method) {
+            case "shift":
+                System.out.println("shift");
+                sorting = new ShiftSort();
+                break;
+            case "bubble":
+                sorting = new BubbleSort();
+                System.out.println("bubble");
+                break;
+            case "quick":
+                myQSort(array, 0, array.length - 1);
+                break;
+            default:
+                System.err.println("You must  enter method of sorting!");
+                break;
+        }
+        if (sorting != null) {
+            sorting.sort(array);
+        } else {
+            System.err.println("error!");
+        }
+    }
+
+
+}
